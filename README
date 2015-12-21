@@ -1,3 +1,6 @@
+Clean using:
+    make clean
+
 Compile using:
     make
 
