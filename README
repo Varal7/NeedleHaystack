@@ -2,4 +2,4 @@ Compile using:
     make
 
 Run tests using:
-    make test
+    make test SOURCE='"source.txt"' TARGET='"query.txt"'
