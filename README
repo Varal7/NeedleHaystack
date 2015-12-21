@@ -6,3 +6,5 @@ Compile using:
 
 Run tests using:
     make test SOURCE='"source.txt"' TARGET='"query.txt"'
+
+This project was made using Git.
