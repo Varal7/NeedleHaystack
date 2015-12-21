@@ -29,7 +29,8 @@ public class Main {
 
         char[] haystack  = readFile(hFileName);
         char[] needle = readFile(nFileName);
-        int result = new Naive(haystack, needle).search();
+//        int result = new Naive(haystack, needle).search();
+        int result = new KarpRabin(haystack, needle).search();
 
 
         if (result == -1) {
