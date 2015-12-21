@@ -15,10 +15,21 @@ public class Main {
             hFileName = args[0];
         }
         if (args.length >=2) {
-            hFileName = args[1];
+            nFileName = args[1];
         }
 
         char[] haystack  = readFile(hFileName);
+        char[] needle = readFile(nFileName);
+        int result = new Naive(haystack, needle).search();
+
+
+        if (result == -1) {
+          System.out.println("Needle not found");
+        }
+        else {
+          System.out.println("Needle found at index: " + result);
+        }
+
     }
 
     static char[] readFile(String fileName) {
@@ -39,4 +50,3 @@ public class Main {
         return charArray;
         }
 }
-
