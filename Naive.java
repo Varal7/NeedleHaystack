@@ -7,11 +7,11 @@ public class Naive {
    private int hLength;
    private int nLength;
 
-   public Naive(char[] s1, char[] s2) {
+   public Naive(char[] s1, char[] s2, int l1, int l2) {
      this.haystack = s1;
      this.needle = s2;
-     this.hLength = s1.length-1;
-     this.nLength = s2.length-1;
+     this.hLength = l1;
+     this.nLength = l2;
      System.out.println("Search using naive algorithm");
      System.out.println("Haystack has size: " + hLength);
      System.out.println("Needle has size: " + nLength);

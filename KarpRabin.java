@@ -12,11 +12,11 @@ public class KarpRabin {
   private int needle_hash;
 
 
-  public KarpRabin(char s1[], char s2[]) {
+  public KarpRabin(char[] s1, char[] s2, int l1, int l2) {
     this.haystack = s1;
     this.needle = s2;
-    this.hLength = s1.length-1;
-    this.nLength = s2.length-1;
+    this.hLength = l1;
+    this.nLength = l2;
     w = 3000000;
     last_hash = -1;
     powerOfTwo = twoToThe(nLength-1);

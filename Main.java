@@ -29,9 +29,21 @@ public class Main {
 
         char[] haystack  = readFile(hFileName);
         char[] needle = readFile(nFileName);
-//        int result = new Naive(haystack, needle).search();
-//        int result = new KarpRabin(haystack, needle).search();
-		int result = new KnuthMorrisPratt(haystack, needle).search();
+        int hLength = haystack.length;
+        int nLength = needle.length;
+
+        if (haystack[hLength-1] == '\n'){
+          hLength--;
+//          System.out.println("Removed Trailing newline");
+        }
+        if (needle[nLength-1] == '\n'){
+          nLength--;
+//          System.out.println("Removed Trailing newline");
+        }
+
+//      int result = new Naive(haystack, needle,hLength,nLength).search();
+//      int result = new KarpRabin(haystack, needle,hLength,nLength).search();
+		    int result = new KnuthMorrisPratt(haystack, needle,hLength,nLength).search();
 
 
         if (result == -1) {
@@ -39,7 +51,7 @@ public class Main {
         }
         else {
           System.out.println("Needle found at index: " + result);
-          printComparisons(result, haystack, needle);
+          printComparisons(result, haystack, needle,hLength,nLength);
         }
 
     }
@@ -62,13 +74,11 @@ public class Main {
         return charArray;
         }
 
-      static void printComparisons(int index, char[] haystack, char[] needle) {
+      static void printComparisons(int index, char[] haystack, char[] needle,int hLength,int nLength) {
         /**
          * Displays result of search in a beautiful way
          *
          **/
-         int hLength = haystack.length-1;
-         int nLength = needle.length-1;
          int start = Math.max(0,index-precedingChars);
          int bodyLength = Math.min(nLength, displayedChars-precedingChars);
          int end = Math.min(hLength, start+displayedChars);
@@ -81,7 +91,5 @@ public class Main {
          for (int i = index+bodyLength; i < end ; i++)
            System.out.print(haystack[i]);
          System.out.println("");
-
-
       }
 }
