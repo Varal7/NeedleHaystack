@@ -40,7 +40,7 @@ public class BoyerMoore{
 	public void setSuffixe(){
 	
 	//rechercher le premier emplacement en partant de droite d'une sschaine egale suffixe a partir de i
-	
+	//set prefixe aussi
 		int nextIndex = nLength-1;
 		int[] longSuffixCom = new int[nLength];
 		int[] reponsePossible = new int[nLength];
@@ -74,10 +74,45 @@ public class BoyerMoore{
 				
 		}
 		
-	//la ou on a des -1 il faut remplir avec autchose.
+	//la ou on a des -1 il faut remplir prefixe avec autchose.
+	//prefixe contient la longueur commune entre la fin de la ch depuis i et le debut.
 	
+		for(int i=0; i<nLength-longSuffixCom[0]; i++){
+			prefixe[i] = longSuffixCom[0];
+		}
+		int[] compareDebutFin = new int[longSuffixCom[0]];
+		//longueur commune entre deb de la ch et et la fin a partir (apres) char j.
 		
-	
+		nextIndex=0;
+		for(int j = 1; j<longSuffixCom[0]; j++){
+		
+			for(int k=j; k<longSuffixCom[0]; k++){
+				if(needle[k]==needle[nextIndex]){
+					compareDebutFin[j-1]++;
+					nextIndex++;
+				}
+				else{
+					nextIndex=0;
+					compareDebutFin[j-1]=0;
+					break;
+				}
+				
+			}
+			
+		
+		}
+		
+		int longMax =0;
+		for(int i = nLength-1; i>=nLength-longSuffixCom[0]; i--){
+		
+			if(compareDebutFin[i+longSuffixCom[0]-nLength]>longMax){
+				longMax=compareDebutFin[i+longSuffixCom[0]-nLength];
+			}
+			
+			prefixe[i]=longMax;
+			
+		}
+		
 	}
 	
 	public int search(){
@@ -89,38 +124,47 @@ public class BoyerMoore{
 		char Char;
 		int nextSuffix;
 		
+		setOccurrences();
+		setSuffixe();
+		
 		while(offset<=hLength-nLength){
 		
-			shift=1;
+			
+			System.out.println(offset);
 			
 			mismatch=compare(offset);
 			if(mismatch==-1)
 				return offset;
 				
-			
 			//check bad character
+			
+			
 			shift = mismatch+1; //dans le cas ou le caractere de haystack nest pas dans needle
 			
-	//		Char = haystack[offset+mismatch];
-	//		int value = (int)Char;
-	//		
-	//		for(int index : occurrences.get(value){
-				
-	//			if(index<mismatch){
-	//				shift = mismatch-index;
-	//				break;
-	//			}
-	//		}
+			Char = haystack[offset+mismatch];
+			int value = (int)Char;
+			
+			for(int index : occurrences.get(value)){
+		
+				if(index<mismatch){
+					shift = mismatch-index;
+					break;
+				}
+			}
 			
 			//check good suffix
+			
 			nextSuffix = suffixe[mismatch];
+			
 			if(nextSuffix==-1){
-				nextSuffix=prefixe[mismatch];
+				nextSuffix = -(nLength-mismatch-prefixe[mismatch]);
 			}
-			if(shift<mismatch-nextSuffix)
+			
+			if(shift<mismatch-nextSuffix){
 				shift=mismatch-nextSuffix;
+			}
 			
-			
+			offset = offset+shift;
 			
 		}
 		
