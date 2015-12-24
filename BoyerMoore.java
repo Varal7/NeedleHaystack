@@ -7,17 +7,16 @@ public class BoyerMoore{
 	private int hLength;
 	private int nLength;
 	public ArrayList<ArrayList<Integer>> occurrences;
-	private int sizeAlphabet;
 	public int[] suffixe;
 	public int[] prefixe;
+        final private int MAX_ALPHABET_SIZE = 1111998;
 	
-	public BoyerMoore(char[] s1, char[] s2, int l1, int l2, int size){
+	public BoyerMoore(char[] s1, char[] s2, int l1, int l2){
 	
 		this.haystack = s1;
 		this.needle = s2;
 		this.hLength = l1;
 		this.nLength = l2;
-		this.sizeAlphabet = size;
 		
 		this.occurrences = new ArrayList<ArrayList<Integer>>();
 			
@@ -29,11 +28,11 @@ public class BoyerMoore{
 	
 	public void setOccurrences(){
 	
-		for(ArrayList L : occurrences)
-			L= new ArrayList<Integer>();
-		
-		for(int i=0; i<nLength; i++){
-			occurrences.get(needle[nLength-1-i]).add(i,nLength-1-i);
+                for (int i =0; i< MAX_ALPHABET_SIZE; i++) {
+                    occurrences.add(new ArrayList<Integer>());
+                }
+		for(int i=nLength-1; i>=0; i--){
+			occurrences.get(needle[i]).add(i);
 		}
 		
 	}
@@ -51,7 +50,7 @@ public class BoyerMoore{
 		for(int i=0; i<nLength; i++)
 			suffixe[i] = -1;
 		
-		for(int i=nLength-2; i>=0; i--){
+		for(int i=nLength-2; i >= 0; i--){
 			
 			if(needle[i]==needle[nextIndex]){
 				nextIndex--;
