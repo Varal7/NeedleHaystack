@@ -7,4 +7,4 @@ clean:
 	rm -f *~ *.class
 
 test: all
-	time java -ea -Xmx2G Main $(SOURCE) $(TARGET)
+	java -ea -Xmx2G Main $(SOURCE) $(TARGET)

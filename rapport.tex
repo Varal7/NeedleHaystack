@@ -1,0 +1,105 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb}
+\usepackage[titlepage,fancysections]{polytechnique}
+\usepackage{hyperref}
+
+\title{Finding a needle in a haystack}
+\author{Chloé \textsc{Papin} et Victor \textsc{Quach}}
+\date{\today{}}
+
+\begin{document}
+\maketitle
+	
+\section{Implementation of the four algorithms}
+
+We use char arrays to store our strings. 
+
+\subsection{Naive algorithm}
+See file \nolinkurl{Naive.java}
+
+This simply implements the algorithm described in the subject. See file \nolinkurl{Naive.java}
+
+\subsection{Karp-Rabin algorithm}
+
+See file \nolinkurl{KarpRabin.java}.
+
+We chose $ w = 3000000$.\\
+
+
+
+\nolinkurl{hash} calculates the hash of the string defined by the char array s. It uses Ruffini-Horner's algorithm to do so (hash seen as a polynomial evaluated for the value 2).
+
+Similarly, \nolinkurl{hash_index}  computes the hash of the substring of query, starting from given index. 
+
+All calculations are done $\text{mod } w $ so that queries of length greater than 32 can be found.
+
+ Otherwise, we would be limited by \nolinkurl{MAX_INT} (and queries would fail after 32 characters). At first, the function \nolinkurl{twotothe} was implemented using exponentiation by squaring, then with a recursive implementation but it caused a stack overflow, so we ended up using a library function.
+
+
+\subsection{Knuth-Morris-Pratt}
+
+See file \nolinkurl{Knuth-morris-Pratt.java}.
+
+The function \nolinkurl{setNext} fills the array \nolinkurl{next} as described by the subject.
+
+\nolinkurl{next[0]} is not defined (nor used): a mismatch in a first character gives no information on the haystack.
+
+To set the \nolinkurl{next} array, we use an auxiliary array in which we store, for each index \nolinkurl{i}, the length of the maximal string which is both a prefix of \nolinkurl{needle} and a suffix of \nolinkurl{needle[0..i]}, whether or not these are followed by unmatching characters. Then we can keep only the information concerning the case where the last character differs.
+
+
+
+\subsection{Boyer-Moore}
+
+See file \nolinkurl{Boyer-Moore.java}. 
+
+To store the occurences of the characters, we decided to use a hashmap. It is an efficient way to store these, whatever the size of the alphabet.
+
+The implementation of the array in which we stored the indices for the good-suffix rule was not optimal. The first version we used consisted in using two different arrays, the first one in case the suffix did exist somewhere else in the string, and the second one in case we had to find the best prefix matchnig the suffix. However, this did not pass all the tests, so we kept a naive version of this search.
+
+
+
+\section{Complexity}
+
+\subsection{Naive algorithm}
+
+This algorithm has a $O(mn)$ complexity.
+
+
+\subsection{Karp-Rabin algorithm}
+
+If there are no hash collisions, this algorithm runs in $O(n)$. However, in worst-time, this is still $O(mn)$.
+
+
+\subsection{Knuth-Morris-Pratt algorithm}
+
+Let's show that the complexity of this algorithm is linear in the worst-case. Each character of the haystack might be read more than once: exactly each time there is a mismatch and following a strike of successes. But this happens only at most the number of times there were successes, that is a runtime of at most $2n$.
+
+\subsection{Boyer-Moore algorithm}
+
+The preprocessing for the Good shift rule that me implemented runs in $O(m^3)$. We have not implemented the $O(m)$ algorithm.
+
+ 
+ \section{Performance}
+ 
+ In most of our tests, the naive algorithm was the fastest of all 4.
+ 
+ Tests used :
+ \begin{itemize}
+ \item Easy tests to check that the algorithm worked
+ \item Random needles of increasing length against all data files given by the subject
+ \item Handcrafted tests with repeated patterns to try to make Boyer-Moore outperform the naive algorithm.
+ \end{itemize}
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+\end{document}

@@ -1,3 +1,5 @@
+import java.math.BigInteger;
+
 public class KarpRabin {
   /*
    * This class implements KarpRabin algorithm described for question 1
@@ -39,6 +41,8 @@ public class KarpRabin {
       result += s[i];
       result %= w;
     }
+    //System.out.println("Hash" +result);
+
     return result;
   }
 
@@ -51,7 +55,10 @@ public class KarpRabin {
     if (index==0) {
       return last_hash = hash(haystack);
     }
-    return last_hash = ((last_hash - haystack[index-1]*powerOfTwo)*2 + haystack[index+nLength-1])%w;
+    last_hash = (((last_hash - haystack[index-1]*powerOfTwo)*2 + haystack[index+nLength-1]) %w +w) %w;
+    //System.out.println(last_hash);
+    return last_hash;
+
   }
 
   public int search() {
@@ -67,22 +74,19 @@ public class KarpRabin {
   }
 
   private int twoToThe(int exp) {
-    if (exp == 0) {
-      return 1;
-    }
-    int previous = twoToThe(exp/2);
-    if (exp%2 == 0) {
-      return previous*previous;
-    }
-    return previous*previous*2;
+    /* Returns two to the exp, mod w
+     *
+     */
+    BigInteger b = BigInteger.valueOf(2).modPow(BigInteger.valueOf(exp), BigInteger.valueOf(w));
+    return b.intValue();
   }
 
   private boolean checkHash(int pos) {
-    return (needle_hash == hash_index(pos));
+    return (needle_hash) == (hash_index(pos));
   }
 
   private boolean checkPos(int pos) {
-    System.out.println("Checking one candidate at pos:" + pos);
+    //System.out.println("Checking one candidate at pos:" + pos);
      for (int i = 0; i < nLength; i++) {
        if (needle[i] != haystack[pos+i]) {
          return false;

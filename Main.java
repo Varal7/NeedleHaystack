@@ -41,11 +41,14 @@ public class Main {
 //          System.out.println("Removed Trailing newline");
         }
 
-//      int result = new Naive(haystack, needle,hLength,nLength).search();
-//      int result = new KarpRabin(haystack, needle,hLength,nLength).search();
-		    int result = new KnuthMorrisPratt(haystack, needle,hLength,nLength).search();
+        long t0 = System.currentTimeMillis();
+        //  int result = new Naive(haystack, needle,hLength,nLength).search();
+        // int result = new KarpRabin(haystack, needle,hLength,nLength).search();
+		    // int result = new KnuthMorrisPratt(haystack, needle,hLength,nLength).search();
+		     int result = new BoyerMoore(haystack, needle,hLength,nLength).search();
+         long tf = System.currentTimeMillis();
 
-
+         System.out.println("Time : " +(tf -t0) +"ms") ;
         if (result == -1) {
           System.out.println("Needle not found");
         }

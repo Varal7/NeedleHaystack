@@ -19,7 +19,7 @@ public class KnuthMorrisPratt{
 	}
 
 	public void setNext(){
-		//remplir le tableau next
+		//fills the array next
 		int nextIndex=0;
 		int[] lengthMaxPrefix = new int[nLength];
 

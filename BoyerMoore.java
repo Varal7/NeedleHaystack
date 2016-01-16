@@ -6,182 +6,124 @@ public class BoyerMoore{
 	private char[] needle;
 	private int hLength;
 	private int nLength;
-	public ArrayList<ArrayList<Integer>> occurrences;
+	public HashMap<Character,ArrayList<Integer>> occurences;
 	public int[] suffixe;
 	public int[] prefixe;
-        final private int MAX_ALPHABET_SIZE = 1111998;
-	
+
+
 	public BoyerMoore(char[] s1, char[] s2, int l1, int l2){
-	
+
 		this.haystack = s1;
 		this.needle = s2;
 		this.hLength = l1;
 		this.nLength = l2;
-		
-		this.occurrences = new ArrayList<ArrayList<Integer>>();
-			
+
+		this.occurences = new HashMap<Character,ArrayList<Integer>>();
+
 		this.suffixe = new int[l2];
 		this.prefixe = new int[l2];
-		
-	
+
+    System.out.println("Search using Boyer-Moore algorithm");
+    System.out.println("Haystack has size: " + hLength);
+    System.out.println("Needle has size: " + nLength);
+
 	}
-	
-	public void setOccurrences(){
-	
-                for (int i =0; i< MAX_ALPHABET_SIZE; i++) {
-                    occurrences.add(new ArrayList<Integer>());
-                }
+
+	public void setOccurences(){
 		for(int i=nLength-1; i>=0; i--){
-			occurrences.get(needle[i]).add(i);
+			ArrayList<Integer> l;
+			if (occurences.containsKey(needle[i])) {
+				l = occurences.get(needle[i]);
+			}
+			else {
+				l = new ArrayList<Integer>();
+				occurences.put(needle[i],l);
+			}
+			l.add(i);
 		}
-		
+
 	}
-	
+
 	public void setSuffixe(){
-	
-	//rechercher le premier emplacement en partant de droite d'une sschaine egale suffixe a partir de i
-	//set prefixe aussi
-		int nextIndex = nLength-1;
-		int[] longSuffixCom = new int[nLength];
-		int[] reponsePossible = new int[nLength];
-		
-		//set reponsePossible : donne a l'indice j la longueur du suffixe commun, needle[j] exclu.
-		
-		for(int i=0; i<nLength; i++)
-			suffixe[i] = -1;
-		
-		for(int i=nLength-2; i >= 0; i--){
-			
-			if(needle[i]==needle[nextIndex]){
-				nextIndex--;
-				longSuffixCom[i] = longSuffixCom[i+1]+1;
-			}
-			
-			else{
-				nextIndex = nLength-1;
-				reponsePossible[i]= longSuffixCom[i+1];
-			}
-			
-		}
-		
-	//	int longueurActuelle = 0;
-	//	int minIndiceTraite = nLength;
-		
-		for(int j=nLength-2; j>=0; j--){
-			
-			if(suffixe[nLength-1-reponsePossible[j]]<0)
-				suffixe[nLength-1-reponsePossible[j]] = j;
-				
-		}
-		
-	//la ou on a des -1 il faut remplir prefixe avec autchose.
-	//prefixe contient la longueur commune entre la fin de la ch depuis i et le debut.
-	
-		for(int i=0; i<nLength-longSuffixCom[0]; i++){
-			prefixe[i] = longSuffixCom[0];
-		}
-		int[] compareDebutFin = new int[longSuffixCom[0]];
-		//longueur commune entre deb de la ch et et la fin a partir (apres) char j.
-		
-		nextIndex=0;
-		for(int j = 1; j<longSuffixCom[0]; j++){
-		
-			for(int k=j; k<longSuffixCom[0]; k++){
-				if(needle[k]==needle[nextIndex]){
-					compareDebutFin[j-1]++;
-					nextIndex++;
+
+		for(int i=0; i<nLength; i++){
+			for(int j=0; j<nLength; j++){
+				boolean ok = true;
+				int max_k = Math.max(i-1, nLength-1);
+				for(int k=0; k<=max_k; k++){
+					if(needle[nLength-1-k] != needle[nLength-1-j-k])
+						ok = false;
 				}
-				else{
-					nextIndex=0;
-					compareDebutFin[j-1]=0;
+				if(ok){
+					suffixe[nLength-1-i] = nLength-1-j-i;
 					break;
 				}
-				
 			}
-			
-		
 		}
-		
-		int longMax =0;
-		for(int i = nLength-1; i>=nLength-longSuffixCom[0]; i--){
-		
-			if(compareDebutFin[i+longSuffixCom[0]-nLength]>longMax){
-				longMax=compareDebutFin[i+longSuffixCom[0]-nLength];
-			}
-			
-			prefixe[i]=longMax;
-			
-		}
-		
-	}
-	
+ 	}
+
 	public int search(){
-	
+
 		int offset = 0;
 		int comparedIndex = nLength-1;
 		int shift;
 		int mismatch;
-		char Char;
+		char car;
 		int nextSuffix;
-		
-		setOccurrences();
+
+		setOccurences();
 		setSuffixe();
-		
+
 		while(offset<=hLength-nLength){
-		
-			
-			System.out.println(offset);
-			
+
+
+			//System.out.println(offset);
+
 			mismatch=compare(offset);
 			if(mismatch==-1)
 				return offset;
-				
+
 			//check bad character
-			
-			
+
+
 			shift = mismatch+1; //dans le cas ou le caractere de haystack nest pas dans needle
-			
-			Char = haystack[offset+mismatch];
-			int value = (int)Char;
-			
-			for(int index : occurrences.get(value)){
-		
+
+			car = haystack[offset+mismatch];
+
+			for(int index : occurences.get(car)){
+
 				if(index<mismatch){
 					shift = mismatch-index;
 					break;
 				}
 			}
-			
+
 			//check good suffix
-			
+
 			nextSuffix = suffixe[mismatch];
-			
-			if(nextSuffix==-1){
-				nextSuffix = -(nLength-mismatch-prefixe[mismatch]);
-			}
-			
+
+			// if(nextSuffix==-1){
+			// 	nextSuffix = -(nLength-mismatch-prefixe[mismatch]);
+			// }
+
 			if(shift<mismatch-nextSuffix){
 				shift=mismatch-nextSuffix;
 			}
-			
 			offset = offset+shift;
-			
 		}
-		
 		return -1;
-	
 	}
-	
+
 	public int compare(int offset){
 	// compare la chaine needle avec haystack de droite à gauche
-		
+
 		for(int i=nLength-1; i>=0;i--){
 			if(needle[i]!=haystack[i+offset])
 				return(i);
 		}
-		
+
 		return -1;
-	
+
 	}
 
 }
