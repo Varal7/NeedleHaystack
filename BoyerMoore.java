@@ -90,13 +90,17 @@ public class BoyerMoore{
 
 			car = haystack[offset+mismatch];
 
-			for(int index : occurences.get(car)){
+			ArrayList<Integer> l = occurences.get(car);
+			if (l != null){
+				for(int index : l){
 
-				if(index<mismatch){
-					shift = mismatch-index;
-					break;
+					if(index<mismatch){
+						shift = mismatch-index;
+						break;
+					}
 				}
 			}
+
 
 			//check good suffix
 

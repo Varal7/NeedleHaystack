@@ -1,4 +1,4 @@
-import java.io.File;
+    import java.io.File;
 import java.nio.ByteBuffer;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,12 +41,52 @@ public class Main {
 //          System.out.println("Removed Trailing newline");
         }
 
-        long t0 = System.currentTimeMillis();
-        //  int result = new Naive(haystack, needle,hLength,nLength).search();
-        // int result = new KarpRabin(haystack, needle,hLength,nLength).search();
-		    // int result = new KnuthMorrisPratt(haystack, needle,hLength,nLength).search();
-		     int result = new BoyerMoore(haystack, needle,hLength,nLength).search();
-         long tf = System.currentTimeMillis();
+        long t0, tf;
+        int result;
+
+
+        t0 = System.currentTimeMillis();
+	    result = new Naive(haystack, needle,hLength,nLength).search();
+        tf = System.currentTimeMillis();
+
+         System.out.println("Time : " +(tf -t0) +"ms") ;
+        if (result == -1) {
+          System.out.println("Needle not found");
+        }
+        else {
+          System.out.println("Needle found at index: " + result);
+          printComparisons(result, haystack, needle,hLength,nLength);
+        }
+
+        t0 = System.currentTimeMillis();
+        result = new KarpRabin(haystack, needle,hLength,nLength).search();
+        tf = System.currentTimeMillis();
+
+         System.out.println("Time : " +(tf -t0) +"ms") ;
+        if (result == -1) {
+          System.out.println("Needle not found");
+        }
+        else {
+          System.out.println("Needle found at index: " + result);
+          printComparisons(result, haystack, needle,hLength,nLength);
+        }
+
+        t0 = System.currentTimeMillis();
+        result = new KnuthMorrisPratt(haystack, needle,hLength,nLength).search();
+        tf = System.currentTimeMillis();
+
+         System.out.println("Time : " +(tf -t0) +"ms") ;
+        if (result == -1) {
+          System.out.println("Needle not found");
+        }
+        else {
+          System.out.println("Needle found at index: " + result);
+          printComparisons(result, haystack, needle,hLength,nLength);
+        }
+
+        t0 = System.currentTimeMillis();
+        result = new BoyerMoore(haystack, needle,hLength,nLength).search();
+        tf = System.currentTimeMillis();
 
          System.out.println("Time : " +(tf -t0) +"ms") ;
         if (result == -1) {

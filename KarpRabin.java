@@ -77,7 +77,8 @@ public class KarpRabin {
     /* Returns two to the exp, mod w
      *
      */
-    BigInteger b = BigInteger.valueOf(2).modPow(BigInteger.valueOf(exp), BigInteger.valueOf(w));
+    BigInteger b = BigInteger.valueOf(2).
+    (BigInteger.valueOf(exp), BigInteger.valueOf(w));
     return b.intValue();
   }
 
